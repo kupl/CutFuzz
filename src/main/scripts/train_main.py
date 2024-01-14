@@ -79,7 +79,7 @@ def create_csv(best_generation, subject):
 
 
 def test_input_files(input_set_list, subject, info_num, start_time):
-    if is_java
+    if is_java:
         cov_vec = []
         for current_generation in input_set_list:
             input_files_directory = (
