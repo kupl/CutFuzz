@@ -640,7 +640,7 @@ def update_pruning_list(
         diff_list = []
         for i in left_cluster:
             diff_list.append(cov_diff(top_k_cluster[cluster_num][0], i[0]))
-        while True:
+        while len(diff_list) > 0:
             min_diff_index = diff_list.index(min(diff_list))
             if diff_list[min_diff_index] < parameter_set[1]:
                 print(
