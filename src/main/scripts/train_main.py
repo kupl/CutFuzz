@@ -643,7 +643,7 @@ def update_pruning_list(
     # merge clusters
     left_cluster = result[cluster_top_k:]
     for cluster_num in range(cluster_top_k):
-        print("Original cluster :", len(top_k_cluster[cluster_num][1]))
+        # print("Original cluster :", len(top_k_cluster[cluster_num][1]))
         # print("\t", top_k_cluster[cluster_num][1])
         diff_list = []
         for i in left_cluster:
