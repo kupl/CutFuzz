@@ -3,6 +3,7 @@
 ## TODO
 
 - [ ] Write Guide
-- [ ] Test Uploaded Files
+- [x] Test Uploaded Files
+- [ ] Add Demo
 - [ ] Check Licenses
 - [ ] Upload Paper

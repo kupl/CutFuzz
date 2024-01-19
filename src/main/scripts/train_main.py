@@ -75,7 +75,15 @@ def create_csv(best_generation, subject):
         with open(error_code_file, "a") as f:
             f.write(str(i).zfill(8) + " : " + str(error_code) + "\n")
 
-        os.system("lcov -c --directory " + test_dir + " --output-file " + info_name)
+        if subject == "JSC":
+            os.system(
+                "lcov -c --directory "
+                + test_dir
+                + " --gcov-tool /usr/bin/gcov-7 --output-file "
+                + info_name
+            )
+        else:
+            os.system("lcov -c --directory " + test_dir + " --output-file " + info_name)
 
 
 def test_input_files(input_set_list, subject, info_num, start_time):
