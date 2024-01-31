@@ -1,0 +1,43 @@
+#!/usr/bin/env python3
+import pickle
+import sys
+
+
+def print_dl(dl_dict):
+    sum = 0
+    for token in dl_dict.keys():
+        sum += len(dl_dict[token])
+        for dl in dl_dict[token]:
+            result = str(dl[4])+" times used"+"\n"
+            for i in dl[2]:
+                for j in i:
+                    result += j[0]+"("+str(j[1])+") ->"
+                    if type(j[2]) != int:
+                        for k in j[2]:
+                            result += " "+k
+                    else:
+                        result += " "+str(j[2])+"th rule"
+                    result += " | "
+                result += "\n"
+            if dl[2] != []:
+                result += ", then: \n"
+            for i in dl[1]:
+                result += i[0]+"("+str(i[1])+") ->"
+                if type(i[2]) != int:
+                    for j in i[2]:
+                        result += " "+j
+                else:
+                    result += " "+str(i[2])+"th rule"
+                result += "  |  "
+            result += token+"("+str(dl[0])+") ->"
+            for i in dl[3]:
+                result += " "+i
+            print(result, "\n")
+    print('total:', sum)
+
+
+if __name__ == "__main__":
+    file_name = sys.argv[1]
+    with open(file_name, "rb") as f:
+        l = pickle.load(f)
+    print_dl(l)
