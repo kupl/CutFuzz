@@ -193,8 +193,10 @@ if __name__ == "__main__":
     (prob_rule_dict, depths_dict) = Generator.parse_bnf(
         bnf_file_name, "."+fileExtension)
 
-    # with open("../create_pl/1_best.pickle", "rb") as f:
-    #     pruning_list = pickle.load(f)
+    if os.path.exists("../create_pl/pruning_list.pickle"):
+        with open("../create_pl/pruning_list.pickle", "rb") as f:
+            pruning_list = pickle.load(f)
+    else:
+        pruning_list = {}
 
-    # pruning_list = {}
     test_run(pruning_list, prob_rule_dict, depths_dict)

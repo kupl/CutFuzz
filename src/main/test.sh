@@ -13,27 +13,6 @@ while [ $TOTAL_RUN -lt $TOTAL_MAX ]
 do
 
 	RUN=1
-	MAX=2
-
-	rm -rf "./results"
-	mkdir "./results"
-
-	for subject in "${SUBJECTS[@]}"
-	do
-		echo "$subject"
-		mkdir "./results/$subject"
-
-		mkdir "./automatic_loop_list_$TOTAL_RUN"
-		mkdir "./automatic_loop_list_$TOTAL_RUN/error"
-		mkdir "./automatic_loop_list_$TOTAL_RUN/coverage"
-		echo "output: $TOTAL_RUN"
-		mkdir "./results/$subject/Iteration-1"
-		timeout 43200 python3 ./scripts/train_main.py --outDir="results/$subject/Iteration-1"  --subject="$subject" --fileExtension="$FILE_EXTENSION" --list_dir="./automatic_loop_list_$TOTAL_RUN" --path="$BUILD_PATH" --pgm="$PUT"
-		# timeout 43200 python3 ./scripts/train_main.py --outDir="results/$subject/Iteration-1"  --subject="$subject" --fileExtension="$FILE_EXTENSION" --list_dir="./automatic_loop_list_$TOTAL_RUN" -j
-
-	done
-
-	RUN=1
 	MAX=6
 
 	rm -rf "./results"
@@ -58,7 +37,6 @@ do
 	done
 
 	python3 ./scripts/sumCoverage.py
-	mv "../create_pl/pruning_list.pickle" "./results/"
 	mv "./results" "./results_$TOTAL_RUN"
 
 	true $(( TOTAL_RUN++ ))

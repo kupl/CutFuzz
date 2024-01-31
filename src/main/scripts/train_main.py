@@ -808,7 +808,7 @@ def run(rule_dict, depths_dict, subject):
             pickle.dump(pruning_list, f)
         logs = "--------------------------------------------------------------\n"
         logs += "base pruning list : " + before_pruning_list_name + "\n"
-        os.system("cp " + before_pruning_list_name + " ../create_pl/1_best.pickle")
+        os.system("cp " + before_pruning_list_name + " ../create_pl/pruning_list.pickle")
         logs += "parameter set : " + str(now_parameter_set) + "\n"
         logs += "new pruning list name : " + now_pruning_list_name + "\n"
         with open(list_dir + "/logs.txt", "a") as f:
