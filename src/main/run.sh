@@ -1,68 +1,25 @@
 #!/bin/bash
 
-FILE_EXTENSION=js
-SUBJECTS=()
-BUILD_PATH=
-PUT=
+# Full test with Random Fuzzer
+python3 main.py --benchmark=JerryScript --run_capture --run_test --test_pgm=/root/benchmarks/jerryscript/build/bin/jerry --test_dir=/root/benchmarks/jerryscript/build
+python3 main.py --benchmark=Jsish --run_capture --run_test --test_pgm=/root/benchmarks/jsish/jsish --test_dir=/root/benchmarks/jsish
+python3 main.py --benchmark=QuickJS --run_capture --run_test --test_pgm=/root/benchmarks/QuickJS/qjs --test_dir=/root/benchmarks/QuickJS
+python3 main.py --benchmark=Rhino --run_capture --run_test --test_pgm=java
+python3 main.py --benchmark=Argo --run_capture --run_test --test_pgm=java
+python3 main.py --benchmark=Genson --run_capture --run_test --test_pgm=java
+python3 main.py --benchmark=Gson --run_capture --run_test --test_pgm=java
+python3 main.py --benchmark=JsonToJava --run_capture --run_test --test_pgm=java
 
-TOTAL_RUN=1
-TOTAL_MAX=2
+# Full test with Probabilistic Fuzzer
+python3 main.py --benchmark=JerryScript --use_pcfg --run_capture --run_test --test_pgm=/root/benchmarks/jerryscript/build/bin/jerry --test_dir=/root/benchmarks/jerryscript/build
+python3 main.py --benchmark=Jsish --use_pcfg --run_capture --run_test --test_pgm=/root/benchmarks/jsish/jsish --test_dir=/root/benchmarks/jsish
+python3 main.py --benchmark=QuickJS --use_pcfg --run_capture --run_test --test_pgm=/root/benchmarks/QuickJS/qjs --test_dir=/root/benchmarks/QuickJS
+python3 main.py --benchmark=Rhino --use_pcfg --run_capture --run_test --test_pgm=java
+python3 main.py --benchmark=Argo --use_pcfg --run_capture --run_test --test_pgm=java
+python3 main.py --benchmark=Genson --use_pcfg --run_capture --run_test --test_pgm=java
+python3 main.py --benchmark=Gson --use_pcfg --run_capture --run_test --test_pgm=java
+python3 main.py --benchmark=JsonToJava --use_pcfg --run_capture --run_test --test_pgm=java
 
-
-while [ $TOTAL_RUN -lt $TOTAL_MAX ]
-do
-
-	RUN=1
-	MAX=2
-
-	rm -rf "./results"
-	mkdir "./results"
-
-	for subject in "${SUBJECTS[@]}"
-	do
-		echo "$subject"
-		mkdir "./results/$subject"
-
-		mkdir "./automatic_loop_list_$TOTAL_RUN"
-		mkdir "./automatic_loop_list_$TOTAL_RUN/error"
-		mkdir "./automatic_loop_list_$TOTAL_RUN/coverage"
-		echo "output: $TOTAL_RUN"
-		mkdir "./results/$subject/Iteration-1"
-		timeout 43200 python3 ./scripts/train_main.py --outDir="results/$subject/Iteration-1"  --subject="$subject" --fileExtension="$FILE_EXTENSION" --list_dir="./automatic_loop_list_$TOTAL_RUN" --path="$BUILD_PATH" --pgm="$PUT"
-		# timeout 43200 python3 ./scripts/train_main.py --outDir="results/$subject/Iteration-1"  --subject="$subject" --fileExtension="$FILE_EXTENSION" --list_dir="./automatic_loop_list_$TOTAL_RUN" -j
-
-	done
-
-	RUN=1
-	MAX=6
-
-	rm -rf "./results"
-	mkdir "./results"
-
-	for subject in "${SUBJECTS[@]}"
-	do
-		echo "$subject"
-		mkdir "./results/$subject"
-		while [ $RUN -lt $MAX ]
-		do
-			echo "output: $RUN"
-			mkdir "./results/$subject/Iteration-$RUN"
-			timeout 43200 python3 ./scripts/test_main.py --outDir="results/$subject/Iteration-$RUN"  --subject="$subject" --fileExtension="$FILE_EXTENSION" --path="$BUILD_PATH" --pgm="$PUT"
-			# timeout 43200 python3 ./scripts/test_main.py --outDir="results/$subject/Iteration-$RUN"  --subject="$subject" --fileExtension="$FILE_EXTENSION" -j
-			grep -r ": -" "./results/$subject/Iteration-$RUN/run-*/error_code.txt" > "./results/$subject/Iteration-$RUN/error_code.txt"
-			true $(( RUN++ ))
-		done
-		RUN=1
-
-		python3 ./scripts/analyseExceptions.py --subject="$subject"
-	done
-
-	python3 ./scripts/sumCoverage.py
-	mv "../create_pl/pruning_list.pickle" "./results/"
-	mv "./results" "./results_$TOTAL_RUN"
-
-	true $(( TOTAL_RUN++ ))
-
-done
-
-echo "All done"
+# Short demo test
+python3 main.py --benchmark=Rhino --run_capture --run_test --test_run_num=1 --capture_time=3600 --test_time=3600 --test_pgm=java
+python3 main.py --benchmark=JerryScript --use_pcfg --run_capture --run_test --test_run_num=1 --capture_time=3600 --test_time=3600 --test_pgm=/root/benchmarks/jerryscript/build/bin/jerry --test_dir=/root/benchmarks/jerryscript/build

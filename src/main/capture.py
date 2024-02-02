@@ -11,6 +11,7 @@ import time
 ### Generate & Test Inputs. ###
 ###############################
 
+
 def generate_input_files(current_generation, pruning_list, rule_dict, depths_dict):
     current_generation_directory = "run-" + str(current_generation).zfill(5)
     current_generation_path = os.path.join(baseDirectory, current_generation_directory)
@@ -47,15 +48,8 @@ def create_csv(best_generation, subject):
             csv_name = csv_files + "/" + str(i).zfill(8) + ".csv"
             if not os.path.isfile(csv_name):
                 subprocess.call(
-                    [
-                        "java",
-                        "-jar",
-                        "../tools/coverage-analyser.jar",
-                        str(subject),
-                        "file-coverage-l",
-                        input_name,
-                        csv_name,
-                    ]
+                    f"java -jar ../tools/coverage-analyser.jar {str(subject)} file-coverage-l {input_name} {csv_name}",
+                    shell=True,
                 )
         return
 
@@ -75,15 +69,7 @@ def create_csv(best_generation, subject):
         with open(error_code_file, "a") as f:
             f.write(str(i).zfill(8) + " : " + str(error_code) + "\n")
 
-        if subject == "JSC":
-            os.system(
-                "lcov -c --directory "
-                + test_dir
-                + " --gcov-tool /usr/bin/gcov-7 --output-file "
-                + info_name
-            )
-        else:
-            os.system("lcov -c --directory " + test_dir + " --output-file " + info_name)
+        os.system("lcov -c --directory " + test_dir + " --output-file " + info_name)
 
 
 def test_input_files(input_set_list, subject, info_num, start_time):
@@ -98,16 +84,12 @@ def test_input_files(input_set_list, subject, info_num, start_time):
             result_csv = os.path.join(
                 baseDirectory, "run-" + str(current_generation).zfill(5), "results.csv"
             )
+            print(
+                f"java -jar ../tools/coverage-analyser.jar {str(subject)} file-coverage-all {input_files} {result_csv}"
+            )
             subprocess.call(
-                [
-                    "java",
-                    "-jar",
-                    "../tools/coverage-analyser.jar",
-                    str(subject),
-                    "file-coverage-all",
-                    input_files,
-                    result_csv,
-                ]
+                f"java -jar ../tools/coverage-analyser.jar {str(subject)} file-coverage-all {input_files} {result_csv}",
+                shell=True,
             )
             with open(result_csv, "r") as f:
                 cov_txt = f.readlines()
@@ -158,15 +140,8 @@ def test_input_files(input_set_list, subject, info_num, start_time):
                 baseDirectory, "run-" + str(current_generation).zfill(5), "results.csv"
             )
             subprocess.call(
-                [
-                    "java",
-                    "-jar",
-                    "../tools/coverage-analyser.jar",
-                    str(subject),
-                    "file-coverage-l",
-                    input_files,
-                    result_csv,
-                ]
+                f"java -jar ../tools/coverage-analyser.jar {str(subject)} file-coverage-l {input_files} {result_csv}",
+                shell=True,
             )
             with open(result_csv, "r") as f:
                 cov = f.read()
@@ -244,17 +219,7 @@ def test_input_files(input_set_list, subject, info_num, start_time):
     result_info_file = os.path.join(
         list_dir, "coverage", str(info_num).zfill(5) + "_cov.info"
     )
-    if subject == "JSC":
-        os.system(
-            "lcov -c --directory "
-            + test_dir
-            + " --gcov-tool /usr/bin/gcov-7 --output-file "
-            + result_info_file
-        )
-    else:
-        os.system(
-            "lcov -c --directory " + test_dir + " --output-file " + result_info_file
-        )
+    os.system("lcov -c --directory " + test_dir + " --output-file " + result_info_file)
 
     with open(result_info_file, "r") as f:
         cov = f.readlines()
@@ -294,9 +259,11 @@ def test_input_files(input_set_list, subject, info_num, start_time):
         )
     return cov_vec
 
+
 ##############################
 ### Generate Pruning List. ###
 ##############################
+
 
 def initial_total_dt(dt):
     if len(dt) == 1:
@@ -685,9 +652,11 @@ def update_pruning_list(
 
     return (result, base_pruning_list), pruning_list
 
+
 ######################
 ### Util Functions ###
 ######################
+
 
 def count_cov_func(cov):
     total_count_cov = 0
@@ -750,9 +719,11 @@ def remove_empty_lines(filename):
         lines = filter(lambda x: x.strip(), lines)
         file.writelines(lines)
 
+
 ######################
 ### Main Functions ###
 ######################
+
 
 def run(rule_dict, depths_dict, subject):
     start_time = time.time()
@@ -762,8 +733,8 @@ def run(rule_dict, depths_dict, subject):
     before_bundle = None
     pruning_list = {}
 
-    os.system('rm -rf "./results/' + subject + '/Iteration-1"')
-    os.system('mkdir "./results/' + subject + '/Iteration-1"')
+    os.system(f'rm -rf "{baseDirectory}"')
+    os.system(f'mkdir "{baseDirectory}"')
     for current_generation in range(10):
         generate_input_files(current_generation, {}, rule_dict, depths_dict)
     before_cov_vec = test_input_files(range(10), subject, 0, start_time)
@@ -808,14 +779,16 @@ def run(rule_dict, depths_dict, subject):
             pickle.dump(pruning_list, f)
         logs = "--------------------------------------------------------------\n"
         logs += "base pruning list : " + before_pruning_list_name + "\n"
-        os.system("cp " + before_pruning_list_name + " ../create_pl/pruning_list.pickle")
+        os.system(
+            "cp " + before_pruning_list_name + " " + list_dir + "/pruning_list.pickle"
+        )
         logs += "parameter set : " + str(now_parameter_set) + "\n"
         logs += "new pruning list name : " + now_pruning_list_name + "\n"
         with open(list_dir + "/logs.txt", "a") as f:
             f.write(logs)
 
-        os.system('rm -rf "./results/' + subject + '/Iteration-1"')
-        os.system('mkdir "./results/' + subject + '/Iteration-1"')
+        os.system(f'rm -rf "{baseDirectory}"')
+        os.system(f'mkdir "{baseDirectory}"')
         for current_generation in range(10):
             generate_input_files(
                 current_generation, pruning_list, rule_dict, depths_dict
@@ -857,42 +830,80 @@ def run(rule_dict, depths_dict, subject):
 
 
 if __name__ == "__main__":
-    # Parser Options
     parser = optparse.OptionParser()
-    parser.add_option("-p", "--outDir", type="string", dest="outdir")
-    parser.add_option("-e", "--fileExtension", type="string", dest="fileExt")
-    parser.add_option("-s", "--subject", type="string", dest="sub")
-    parser.add_option("-l", "--list_dir", type="string", dest="list_dir")
-    parser.add_option("-j", "--is_java", action="store_true", dest="is_java", default=False)
-    parser.add_option("--path", type="string", dest="test_dir")
-    parser.add_option("--pgm", type="string", dest="test_pgm")
+    parser.add_option(
+        "--benchmark",
+        dest="benchmark",
+    )
+    parser.add_option(
+        "--fileExtension",
+        dest="fileExtension",
+    )
+    parser.add_option(
+        "--use_pcfg",
+        dest="use_pcfg",
+        action="store_true",
+    )
+    parser.add_option(
+        "--list_dir",
+        dest="list_dir",
+    )
+    parser.add_option(
+        "--result_dir",
+        dest="result_dir",
+    )
+    parser.add_option(
+        "--n_top",
+        dest="n_top",
+        type="int",
+    )
+    parser.add_option(
+        "--n_chance",
+        dest="n_chance",
+        type="int",
+    )
+    parser.add_option(
+        "--n_num",
+        dest="n_num",
+        type="int",
+    )
+    parser.add_option(
+        "--test_dir",
+        dest="test_dir",
+    )
+    parser.add_option(
+        "--test_pgm",
+        dest="test_pgm",
+    )
     (options, args) = parser.parse_args()
 
-    subject = options.sub
+    subject = options.benchmark
     list_dir = options.list_dir
-    fileExtension = options.fileExt
-    baseDirectory = os.path.join(os.getcwd(), options.outdir)
+    fileExtension = options.fileExtension
+    baseDirectory = options.result_dir
 
-    is_java = options.is_java
-    if is_java:
+    if options.test_pgm == "java":
+        is_java = True
         test_dir = None
         test_pgm = None
     else:
+        is_java = False
         test_dir = options.test_dir
         test_pgm = options.test_pgm
-        
+
     # Parameters
-    number_individuals = 200
-    cluster_top_k = 10
+    number_individuals = options.n_num // 10
+    cluster_top_k = options.n_top
     update_sequence = 10
     best_generation_k = 10
-
     clustering_para = 1
     capturing_para = 0.01
-    max_para_flag = 3
+    max_para_flag = options.n_chance
 
-    # bnf_file_name_1 = "../bnf/"+fileExtension+"_prob.bnf"
-    bnf_file_name_1 = "../bnf/" + fileExtension + "_random.bnf"
+    if options.use_pcfg:
+        bnf_file_name_1 = "../bnf/" + fileExtension + "_prob.bnf"
+    else:
+        bnf_file_name_1 = "../bnf/" + fileExtension + "_random.bnf"
 
     remove_empty_lines(bnf_file_name_1)
     (rule_dict, depths_dict) = Generator.parse_bnf(bnf_file_name_1, "." + fileExtension)
