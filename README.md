@@ -29,6 +29,8 @@ Options:
                         Rhino, Argo, Genson, Gson, JsonToJava
   --use_pcfg            Use Probabilistic Grammar instead of random grammar
                         (Default: False)
+  --use_pcfg_inv        Use Inversed Probabilistic Grammar instead of random grammar
+                        (Default: False)
   --run_capture         Run capture (Default: False)
   --capture_time=CAPTURE_TIME
                         Capture time(sec) (Default: 43200 = 12h)
