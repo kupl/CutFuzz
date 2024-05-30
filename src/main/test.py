@@ -225,6 +225,11 @@ if __name__ == "__main__":
         action="store_true",
     )
     parser.add_option(
+        "--use_pcfg_inv",
+        dest="use_pcfg_inv",
+        action="store_true",
+    )
+    parser.add_option(
         "--result_dir",
         dest="result_dir",
     )
@@ -267,6 +272,8 @@ if __name__ == "__main__":
 
     if options.use_pcfg:
         bnf_file_name = "../bnf/" + fileExtension + "_prob.bnf"
+    elif options.use_pcfg_inv:
+        bnf_file_name = "../bnf/" + fileExtension + "_inv.bnf"
     else:
         bnf_file_name = "../bnf/" + fileExtension + "_random.bnf"
     remove_empty_lines(bnf_file_name)
