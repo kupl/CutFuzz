@@ -10,8 +10,8 @@ CutFuzz is a generation-based fuzzer that minimizes the generation of less impor
 We provide a Docker image that contains all benchmark programs and dependencies required to run CutFuzz. You can use the following command to pull the image from Docker Hub:
 
 ```bash
-docker pull yunji99/cutfuzz:final
-docker run -it yunji99/cutfuzz:final
+docker pull yunji99/cutfuzz:1.1
+docker run -it yunji99/cutfuzz:1.1
 ```
 
 ## How to Use
