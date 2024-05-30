@@ -14,10 +14,10 @@ python3 main.py --benchmark=JsonToJava --run_capture --run_test --test_pgm=java
 python3 main.py --benchmark=JerryScript --use_pcfg --run_capture --run_test --test_pgm=/root/benchmarks/jerryscript/build/bin/jerry --test_dir=/root/benchmarks/jerryscript/build
 python3 main.py --benchmark=Jsish --use_pcfg --run_capture --run_test --test_pgm=/root/benchmarks/jsish/jsish --test_dir=/root/benchmarks/jsish
 python3 main.py --benchmark=QuickJS --use_pcfg --run_capture --run_test --test_pgm=/root/benchmarks/QuickJS/qjs --test_dir=/root/benchmarks/QuickJS
-python3 main.py --benchmark=Rhino --use_pcfg --run_capture --run_test --test_pgm=java
-python3 main.py --benchmark=Argo --use_pcfg --run_capture --run_test --test_pgm=java
-python3 main.py --benchmark=Genson --use_pcfg --run_capture --run_test --test_pgm=java
-python3 main.py --benchmark=Gson --use_pcfg --run_capture --run_test --test_pgm=java
+python3 main.py --benchmark=Rhino --use_pcfg_inv --run_capture --run_test --test_pgm=java
+python3 main.py --benchmark=Argo --use_pcfg_inv --run_capture --run_test --test_pgm=java
+python3 main.py --benchmark=Genson --use_pcfg_inv --run_capture --run_test --test_pgm=java
+python3 main.py --benchmark=Gson --use_pcfg_inv --run_capture --run_test --test_pgm=java
 python3 main.py --benchmark=JsonToJava --use_pcfg --run_capture --run_test --test_pgm=java
 
 # Short demo test
