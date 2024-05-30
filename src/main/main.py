@@ -34,7 +34,7 @@ def run_capture(opt):
         file_extension = "js"
 
     subprocess.call(
-        f"timeout {str(opt.capture_time)} python3 capture.py --benchmark {opt.benchmark} --fileExtension {file_extension} --use_pcfg {str(opt.use_pcfg)} --list_dir {os.path.join(opt.result_dir, 'capture_data')} --result_dir {os.path.join(opt.result_dir, 'test_data')} --n_top {str(opt.n_top)} --n_chance {str(opt.n_chance)} --n_num {str(opt.n_num)} --test_dir {opt.test_dir} --test_pgm {test_pgm}",
+        f"timeout {str(opt.capture_time)} python3 capture.py --benchmark {opt.benchmark} --fileExtension {file_extension} --use_pcfg {str(opt.use_pcfg)} --use_pcfg_inv {str(opt.use_pcfg_inv)} --list_dir {os.path.join(opt.result_dir, 'capture_data')} --result_dir {os.path.join(opt.result_dir, 'test_data')} --n_top {str(opt.n_top)} --n_chance {str(opt.n_chance)} --n_num {str(opt.n_num)} --test_dir {opt.test_dir} --test_pgm {test_pgm}",
         shell=True,
         stderr=subprocess.STDOUT,
     )
@@ -90,6 +90,7 @@ def run_test(opt, pruning_list):
 if __name__ == "__main__":
     # benchmark - Required
     # use_pcfg - default: False
+    # use_pcfg_inv - default: False
     # run_capture - default: True
     # capture_time - default: 43200
     # run_test - default: True
@@ -119,6 +120,13 @@ if __name__ == "__main__":
         action="store_true",
         default=False,
         help="Use Probabilistic Grammar instead of random grammar (Default: False)",
+    )
+    parser.add_option(
+        "--use_pcfg_inv",
+        dest="use_pcfg_inv",
+        action="store_true",
+        default=False,
+        help="Use Inversed Probabilistic Grammar instead of random grammar (Default: False)",
     )
     parser.add_option(
         "--run_capture",
